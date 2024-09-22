@@ -117,4 +117,23 @@ class TransactionController extends Controller
         $loans = Loan::all();
         return view('server.return', compact('loans'));
     }
+
+    public function returnDetail($id){
+        $loan = Loan::findOrfail($id);
+        return view('server.return-detail', compact('loan'));
+    }
+
+    public function returnBook($id){
+        $loanDetail = LoanDetail::findOrFail($id);
+
+        if($loanDetail->returned_at !== null){
+            return redirect()->back()->with('error', 'Buku Sudah Dikembalikan.');
+        }
+        $loanDetail->update([
+            'returned_at'   => now(),
+            'status'   => '2',
+        ]);
+
+        return redirect()->back()->with('success', 'Buku berhasil Dikembalikan.');
+    }
 }

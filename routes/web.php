@@ -49,4 +49,7 @@ route::middleware(['auth', 'role:admin,operator'])->group(function (){
     route::get( '/dashboard/loan/borrow-book', [TransactionController::class, 'borrowBook'])->name(name: 'borrow.book');
 
     route::get( '/dashboard/return', [TransactionController::class, 'return'])->name('return');
+    route::get( '/dashboard/return/detail/{id}', [TransactionController::class, 'returnDetail'])->name('return.detail');
+    Route::post('/dashboard/return/{id}', [TransactionController::class, 'returnBook'])->name('return.book');
+
 });

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Book;
 use App\Models\Loan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -28,4 +29,7 @@ class LoanDetail extends Model
     {related:
         return $this->belongsTo(Loan::class);
     }
+
+
+
 }

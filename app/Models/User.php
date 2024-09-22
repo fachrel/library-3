@@ -6,6 +6,8 @@ namespace App\Models;
 use App\Models\Loan;
 use App\Models\Review;
 use App\Models\Bookmark;
+use App\Models\LoanDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -65,4 +67,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function userCurrentlyBorrowedBooks()
+    {
+        return LoanDetail::where('invoice', 'like', '%-'.Auth::user()->id.'-%')
+            ->where('status', '1')
+            ->get();
+    }
+    public function userReturnedBooks()
+    {
+        return LoanDetail::where('invoice', 'like', '%-'.Auth::user()->id.'-%')
+            ->where('status', '2')
+            ->with('book')
+            ->get()
+            ->unique('book_id');
+    }
+
 }

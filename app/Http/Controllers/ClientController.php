@@ -15,7 +15,9 @@ class ClientController extends Controller
     }
     public function myBooks(){
         // $books = Book::all();
-        return view('client.my-book');
+        $borrowedBooks = Auth::user()->userCurrentlyBorrowedBooks();
+        $returnedBooks = Auth::user()->userReturnedBooks();
+        return view('client.my-book', compact('borrowedBooks', 'returnedBooks'));
     }
     public function bookmarks(){
         $bookmarks = Bookmark::where('user_id', Auth::user()->id)->get();

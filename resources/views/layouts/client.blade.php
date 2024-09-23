@@ -21,7 +21,7 @@
 
         <!-- BEGIN: Mobile Menu -->
         <x-client.mobile-menu />
-        <!-- END: Mobile Menu -->
+    <!-- END: Mobile Menu -->
         <!-- BEGIN: Top Bar -->
         <x-client.top-bar />
 

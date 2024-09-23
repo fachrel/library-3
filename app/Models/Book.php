@@ -66,4 +66,23 @@ class Book extends Model
             ->where('book_id', $this->id)
             ->exists();
     }
+    public function isBookReturned($userId){
+        return LoanDetail::where('book_id', $this->id)
+            ->whereNotNull('returned_at')
+            ->where('invoice', 'like', "%-$userId-%")
+            ->where('status', '2')
+            ->exists();
+    }
+
+    public function isBookReviewed($userId){
+        return Review::where('book_id', $this->id)
+            ->where('user_id', $userId)
+            ->exists();
+    }
+
+    public function userReview(){
+        return Review::where('user_id', Auth::user()->id)
+                    ->where('book_id', $this->id)
+                    ->first();
+    }
 }

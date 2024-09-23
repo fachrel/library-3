@@ -19,7 +19,6 @@
                             <div class="col-span-12">
                                 <label>Nama Lengkap</label>
                                 <input type="text" name="name" class="input w-full border mt-2" placeholder="Jhon Doe">
-
                             </div>
                             <div class="col-span-12">
                                 <label>Username</label>
@@ -62,12 +61,15 @@
                     </form>
                 </div>
             </div>
-            <div class="hidden md:block mx-auto text-gray-600">Showing 1 to 10 of 150 entries</div>
+            <div class="hidden md:block mx-auto text-gray-600">Showing {{ $users->firstItem() }} to {{$users->lastItem()}} of {{$users->total()}} entries</div>
             <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
-                <div class="w-56 relative text-gray-700">
-                    <input type="text" class="input w-56 box pr-10 placeholder-theme-13" placeholder="Search...">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </div>
+                <form action="{{ route('users.index') }}" method="get" class="flex">
+                    <div class="w-56 relative text-gray-700 mr-2">
+                        <input type="text" class="input w-56 box pr-10 placeholder-theme-13" placeholder="Search..." value="{{ request('search') != null ? request('search') : '' }}" name="search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <button type="submit" class="button inline-block bg-theme-1 text-white">Search</button>
+                </form>
             </div>
         </div>
         <!-- BEGIN: Data List -->
@@ -184,34 +186,9 @@
             </tbody>
         </table>
         <!-- END: Data List -->
-        {{-- <!-- BEGIN: Pagination -->
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-no-wrap items-center">
-            <ul class="pagination">
-                <li>
-                    <a class="pagination__link" href=""> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-left w-4 h-4"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg> </a>
-                </li>
-                <li>
-                    <a class="pagination__link" href=""> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left w-4 h-4"><polyline points="15 18 9 12 15 6"></polyline></svg> </a>
-                </li>
-                <li> <a class="pagination__link" href="">...</a> </li>
-                <li> <a class="pagination__link" href="">1</a> </li>
-                <li> <a class="pagination__link pagination__link--active" href="">2</a> </li>
-                <li> <a class="pagination__link" href="">3</a> </li>
-                <li> <a class="pagination__link" href="">...</a> </li>
-                <li>
-                    <a class="pagination__link" href=""> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right w-4 h-4"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
-                </li>
-                <li>
-                    <a class="pagination__link" href=""> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right w-4 h-4"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg> </a>
-                </li>
-            </ul>
-            <select class="w-20 input box mt-3 sm:mt-0">
-                <option>10</option>
-                <option>25</option>
-                <option>35</option>
-                <option>50</option>
-            </select>
+        <div>
+            {{ $users->links('vendor.pagination.tailwind') }}
         </div>
-        <!-- END: Pagination --> --}}
+
     </div>
 @endsection

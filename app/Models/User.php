@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use App\Models\Loan;
 use App\Models\Review;
 use App\Models\Bookmark;
@@ -53,6 +54,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function($query) use ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
 
     public function loans(): HasMany
     {
@@ -76,11 +85,17 @@ class User extends Authenticatable
     }
     public function userReturnedBooks()
     {
-        return LoanDetail::where('invoice', 'like', '%-'.Auth::user()->id.'-%')
+        return LoanDetail::join('loans', 'loans.id', '=', 'loan_details.loan_id')
+            ->where('loans.user_id', Auth::user()->id)
             ->where('status', '2')
-            ->with('book')
+            ->orderBy('loans.borrowed_at', 'desc')
+            ->with('loan')
             ->get()
-            ->unique('book_id');
-    }
+            ->groupBy(function ($loanDetail) {
+                return Carbon::parse($loanDetail->borrowed_at)->format('Y-m-d'); // Group by formatted date
+            });    }
+
+
+
 
 }

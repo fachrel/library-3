@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
@@ -10,8 +11,9 @@ use App\Http\Controllers\ServerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 
-// Route::get('/', function () {
-//     return view('layouts.server');
+// Route::get('/po', action: function () {
+//     $loans = Loan::all();
+//     return view('printout', compact('loans'));
 // });
 
 // authentication
@@ -27,17 +29,22 @@ route::get( '/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', action: [ClientController::class, 'index'])->name('home');
 // client user role only
 route::middleware(['auth', 'role:user'])->group(function (){
+    Route::get('/books/{id}', [ClientController::class, 'bookDetail'])->name('book.detail');
     Route::get('/my-books', action: [ClientController::class, 'myBooks'])->name('my.books');
     Route::get('/bookmarks', action: [ClientController::class, 'bookmarks'])->name('bookmarks');
     Route::get('/bookmarks/add/{id}', action: [ClientController::class, 'addBookmark'])->name('add.bookmark');
+
+    Route::post('/review/add/{id}', action: [ClientController::class, 'addReview'])->name('add.review');
 
 });
 
 // admin
 route::middleware(['auth', 'role:admin,operator'])->group(function (){
     route::get( '/dashboard', [ServerController::class, 'index'])->name('dashboard');
+    route::post( '/po', [TransactionController::class, 'print'])->name('po');
 
     route::resource( '/dashboard/users', UserController::class);
+    route::get( '/dashboard/users/search', action: [ServerController::class, 'searchUser'])->name('users.search');
     route::resource( '/dashboard/categories', CategoryController::class);
     route::resource( '/dashboard/books', BookController::class);
 

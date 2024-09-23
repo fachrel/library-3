@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Book;
 use App\Models\Loan;
 use App\Models\User;
@@ -115,7 +116,9 @@ class TransactionController extends Controller
 
     public function return(){
         $loans = Loan::all();
-        return view('server.return', compact('loans'));
+        $users = User::where('role', '0')->get();
+
+        return view('server.return', compact('loans', 'users'));
     }
 
     public function returnDetail($id){
@@ -136,4 +139,32 @@ class TransactionController extends Controller
 
         return redirect()->back()->with('success', 'Buku berhasil Dikembalikan.');
     }
+
+    public function print(Request $request)
+    {
+        // dd([$request->user, $request->start_date, $request->end_date]);
+        $loans = Loan::with('user'); // Initializing query with 'user' relationship
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            // Use Carbon to parse the dates and format them to Y-m-d
+            $startDate = Carbon::parse($request->start_date)->format('Y-m-d');
+            $endDate = Carbon::parse($request->end_date)->format('Y-m-d');
+
+            $loans->whereBetween('borrowed_at', [$startDate, $endDate]);
+        }
+        // Filter by user if selected
+        if ($request->filled('user')) {
+            $loans->where('user_id', $request->user);
+        }
+
+
+
+        // Fetch the filtered loans
+        $loans = $loans->get();
+
+        dd($loans);
+
+        return view('printout', compact('loans'));
+    }
+
 }

@@ -14,9 +14,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        if(request('search')){
+            $users = User::search(request('search'))->paginate(10);
+        }else{
+            $users = User::paginate(10);
+        }
         return view( 'server.users', data: compact('users'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.

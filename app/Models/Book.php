@@ -41,6 +41,16 @@ class Book extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rating'); // Calculate the average rating
+    }
+
+    public function totalReviews()
+    {
+        return $this->reviews()->count(); // Count the total number of reviews
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
